@@ -24,7 +24,6 @@ public class Conta {
     private BigDecimal saldo = BigDecimal.ZERO;
 
     @OneToOne
-    @Column(name = "TITULAR")
     private Titular titular;
 
     //enriquecendo classe com metodos
