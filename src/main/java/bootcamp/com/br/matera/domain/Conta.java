@@ -24,7 +24,7 @@ public class Conta {
     @Column(name = "SALDO")
     private BigDecimal saldo = BigDecimal.ZERO;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Titular titular;
 
     //enriquecendo classe com metodos
