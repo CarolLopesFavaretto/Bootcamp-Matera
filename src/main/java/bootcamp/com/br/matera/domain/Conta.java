@@ -1,5 +1,6 @@
 package bootcamp.com.br.matera.domain;
 
+import bootcamp.com.br.matera.exception.ContaInvalidaException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,11 +29,21 @@ public class Conta {
 
     //enriquecendo classe com metodos
 
-    public void debito(BigDecimal valor){
+    public void debito(BigDecimal valor) {
         saldo.subtract(valor);
     }
 
-    public void credito(BigDecimal valor){
+    public void credito(BigDecimal valor) {
         saldo.add(valor);
     }
+
+    public void enviarPix(Conta contaDestino, BigDecimal valor) {
+
+        if (this.saldo.compareTo(valor) <= 0) {
+            throw new ContaInvalidaException("Conta sem saldo disponível.");
+        }
+        this.debito(valor);
+        contaDestino.credito(valor);
+    }
 }
+
