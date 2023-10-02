@@ -20,7 +20,7 @@ public class ContaController {
 
     @GetMapping
     public List<Conta> contas() {
-        return service.contaList();
+        return service.List();
     }
 
     @GetMapping("/{id}")
@@ -32,7 +32,6 @@ public class ContaController {
     public ResponseEntity<ContaResponse> createConta(@RequestBody ContaRequest request) {
         return service.createConta(request);
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

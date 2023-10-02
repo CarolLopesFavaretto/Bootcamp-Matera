@@ -30,7 +30,7 @@ public class ContaService {
     }
 
 
-    public List<Conta> contaList() {
+    public List<Conta> List() {
         return repository.findAll();
     }
 
