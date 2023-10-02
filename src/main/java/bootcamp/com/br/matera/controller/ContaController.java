@@ -33,6 +33,11 @@ public class ContaController {
         return service.createConta(request);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ContaResponse> updateConta(@PathVariable Long id, @RequestBody Conta request){
+        return service.updateConta(id, request);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         return service.delete(id);

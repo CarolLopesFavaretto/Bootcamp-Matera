@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,11 +25,23 @@ public class ContaService {
     @Autowired
     private ContaMapper mapper;
 
+    @Transactional
     public ResponseEntity<ContaResponse> createConta(ContaRequest request) {
         Conta conta = mapper.toModel(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(repository.save(conta)));
     }
 
+    @Transactional
+    public ResponseEntity<ContaResponse> updateConta(Long id, Conta request) {
+        Optional<Conta> contaOptional = repository.findById(id);
+
+        if (contaOptional.isPresent()) {
+            request.setId(id);
+            return ResponseEntity.ok(mapper.toResponse(repository.save(request)));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     public List<Conta> List() {
         return repository.findAll();
