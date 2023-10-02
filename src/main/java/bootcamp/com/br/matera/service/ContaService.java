@@ -29,6 +29,7 @@ public class ContaService {
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(repository.save(conta)));
     }
 
+
     public List<Conta> contaList() {
         return repository.findAll();
     }
@@ -55,7 +56,13 @@ public class ContaService {
         throw new ContaInvalidaException("Conta Invalida");
     }
 
-    public void delete(Long id) {
-        repository.deleteById(id);
+    public ResponseEntity<Void> delete(Long id) {
+        Optional<Conta> contaOptional = findById(id);
+        if (contaOptional.isPresent()) {
+            Conta conta = contaOptional.get();
+            repository.deleteById(conta.getId());
+            return ResponseEntity.noContent().build();
+        }
+        throw new ContaInvalidaException("Conta Invalida");
     }
 }

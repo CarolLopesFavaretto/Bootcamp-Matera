@@ -11,5 +11,4 @@ public interface ContaRepository extends JpaRepository<Conta, Long> {
 
     ContaResponse save(ContaRequest request);
 
-
 }

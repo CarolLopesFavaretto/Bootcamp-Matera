@@ -19,22 +19,23 @@ public class ContaController {
     private ContaService service;
 
     @GetMapping
-    public List<Conta> contas(){
+    public List<Conta> contas() {
         return service.contaList();
     }
 
     @GetMapping("/{id}")
-    public Optional<Conta> findById(@PathVariable Long id){
+    public Optional<Conta> findById(@PathVariable Long id) {
         return service.findById(id);
     }
 
     @PostMapping
-    public ResponseEntity<ContaResponse> createconta(@RequestBody ContaRequest request){
+    public ResponseEntity<ContaResponse> createConta(@RequestBody ContaRequest request) {
         return service.createConta(request);
     }
 
-    @DeleteMapping("/id")
-    public void delete(@PathVariable Long id){
-        service.delete(id);
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        return service.delete(id);
     }
 }
