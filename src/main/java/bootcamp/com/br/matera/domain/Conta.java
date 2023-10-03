@@ -30,18 +30,20 @@ public class Conta {
     //enriquecendo classe com metodos
 
     public void debito(BigDecimal valor) {
-        saldo.subtract(valor);
+        if (this.saldo.compareTo(valor) < 0) {
+            throw new ContaInvalidaException("Conta sem saldo disponível.");
+        }
+        saldo = saldo.subtract(valor);
     }
 
     public void credito(BigDecimal valor) {
-        saldo.add(valor);
+        saldo = saldo.add(valor);
     }
 
     public void enviarPix(Conta contaDestino, BigDecimal valor) {
-
-        if (this.saldo.compareTo(valor) <= 0) {
-            throw new ContaInvalidaException("Conta sem saldo disponível.");
-        }
+//        if (this.saldo.compareTo(valor) <= 0) {
+//            throw new ContaInvalidaException("Conta sem saldo disponível.");
+//        }
         this.debito(valor);
         contaDestino.credito(valor);
     }
