@@ -5,14 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class TitularRequest {
+@AllArgsConstructor
+public class AccountRequest {
 
-    private String nome;
-    private String cpf;
-    private String email;
-    private Long telefone;
+    private String numberAccount;
+    private String agency;
+    private BigDecimal balance;
 }

@@ -7,11 +7,11 @@ import java.time.LocalDateTime;
 @Data
 public class MessageError {
 
-    private String mensagem;
+    private String message;
     private LocalDateTime timestamp;
 
-    public MessageError(String mensagem) {
-        this.mensagem = mensagem;
+    public MessageError(String message) {
+        this.message = message;
         this.timestamp = LocalDateTime.now();
     }
 }

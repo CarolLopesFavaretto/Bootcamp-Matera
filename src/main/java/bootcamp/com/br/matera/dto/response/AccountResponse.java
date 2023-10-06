@@ -11,9 +11,10 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ContaResponse {
+public class AccountResponse {
 
-    private String numeroConta;
-    private String agencia;
-    private BigDecimal saldo;
+    private Long id;
+    private String numberAccount;
+    private String agency;
+    private BigDecimal balance;
 }

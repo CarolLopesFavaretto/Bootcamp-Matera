@@ -14,16 +14,16 @@ import org.hibernate.validator.constraints.br.CPF;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Titular {
+public class Owner {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nome;
+    private String name;
     @CPF
     private String cpf;
     @Email
     private String email;
-    private Long telefone;
+    private Long telephone;
 
 }
