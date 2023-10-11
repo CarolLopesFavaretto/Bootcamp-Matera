@@ -11,4 +11,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     AccountResponse save(AccountRequest request);
 
+    Account findByOwnerCpf (String cpf);
+
 }

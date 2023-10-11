@@ -2,7 +2,9 @@ package bootcamp.com.br.matera.controller;
 
 import bootcamp.com.br.matera.domain.Account;
 import bootcamp.com.br.matera.dto.request.AccountRequest;
+import bootcamp.com.br.matera.dto.request.PixRequest;
 import bootcamp.com.br.matera.dto.response.AccountResponse;
+import bootcamp.com.br.matera.dto.response.PixResponse;
 import bootcamp.com.br.matera.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,13 +34,18 @@ public class AccountController {
 
     @PostMapping
     public ResponseEntity<AccountResponse> createAccount(@RequestBody AccountRequest request) {
-        return service.createConta(request);
+        return service.createAccount(request);
     }
 
     @PostMapping("/entry/{id}/credit/{value}")
     public ResponseEntity<Account> credit(@PathVariable Long id, @PathVariable BigDecimal value) {
         Account account = service.credit(id, value);
         return ResponseEntity.status(HttpStatus.CREATED).body(account);
+    }
+
+    @PostMapping("/entry/pix")
+    public ResponseEntity<PixResponse> pix(@RequestBody PixRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.pix(request));
     }
 
     @PostMapping("/entry/{id}/debit/{value}")
@@ -49,7 +56,7 @@ public class AccountController {
 
     @PutMapping("/{id}")
     public ResponseEntity<AccountResponse> updateAccount(@PathVariable Long id, @RequestBody Account request) {
-        return service.updateConta(id, request);
+        return service.updateAccount(id, request);
     }
 
     @DeleteMapping("/{id}")

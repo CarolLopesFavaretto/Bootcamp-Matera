@@ -41,6 +41,9 @@ public class Account {
     }
 
     public void sendPix(Account destiny, BigDecimal value) {
+        if (this.balance.compareTo(value) < 0){
+            throw new AccountInvalidException("Conta sem saldo disponível.");
+        }
         this.debit(value);
         destiny.credit(value);
     }

@@ -11,10 +11,9 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountRequest {
+public class PixRequest {
 
-    private String numberAccount;
-    private String agency;
+    private String originKey;
+    private String destinationKey;
     private BigDecimal balance;
-    private Long idOwner;
 }

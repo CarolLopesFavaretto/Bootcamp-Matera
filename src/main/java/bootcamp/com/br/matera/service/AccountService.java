@@ -3,7 +3,9 @@ package bootcamp.com.br.matera.service;
 import bootcamp.com.br.matera.domain.Account;
 import bootcamp.com.br.matera.dto.mapper.AccountMapper;
 import bootcamp.com.br.matera.dto.request.AccountRequest;
+import bootcamp.com.br.matera.dto.request.PixRequest;
 import bootcamp.com.br.matera.dto.response.AccountResponse;
+import bootcamp.com.br.matera.dto.response.PixResponse;
 import bootcamp.com.br.matera.exception.AccountInvalidException;
 import bootcamp.com.br.matera.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,21 +28,30 @@ public class AccountService {
     private AccountMapper mapper;
 
     @Transactional
-    public ResponseEntity<AccountResponse> createConta(AccountRequest request) {
+    public ResponseEntity<AccountResponse> createAccount(AccountRequest request) {
         Account account = mapper.toModel(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(repository.save(account)));
     }
 
     @Transactional
-    public ResponseEntity<AccountResponse> updateConta(Long id, Account request) {
-        Optional<Account> contaOptional = repository.findById(id);
+    public ResponseEntity<AccountResponse> updateAccount(Long id, Account request) {
+        Optional<Account> accountOptional = repository.findById(id);
 
-        if (contaOptional.isPresent()) {
+        if (accountOptional.isPresent()) {
             request.setId(id);
             return ResponseEntity.ok(mapper.toResponse(repository.save(request)));
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+    @Transactional
+    public PixResponse pix(PixRequest request){
+        Account accountOrigin = repository.findByOwnerCpf(request.getOriginKey());
+        Account accountDestination = repository.findByOwnerCpf(request.getDestinationKey());
+        accountOrigin.sendPix(accountDestination, request.getBalance());
+        repository.saveAll(List.of(accountOrigin, accountDestination));
+        return new PixResponse(accountOrigin.getBalance(), accountDestination.getBalance());
+
     }
 
     public List<Account> List() {
@@ -51,28 +62,28 @@ public class AccountService {
         return repository.findById(id);
     }
 
-    public Account debit(Long id, BigDecimal valor) {
-        Optional<Account> conta = findById(id);
-        if (conta.isPresent()) {
-            conta.get().debit(valor);
-            return repository.save(conta.get());
+    public Account debit(Long id, BigDecimal value) {
+        Optional<Account> account = findById(id);
+        if (account.isPresent()) {
+            account.get().debit(value);
+            return repository.save(account.get());
         }
         throw new AccountInvalidException("Conta Invalida");
     }
 
-    public Account credit(Long id, BigDecimal valor) {
-        Optional<Account> conta = findById(id);
-        if (conta.isPresent()) {
-            conta.get().credit(valor);
-            return repository.save(conta.get());
+    public Account credit(Long id, BigDecimal value) {
+        Optional<Account> account = findById(id);
+        if (account.isPresent()) {
+            account.get().credit(value);
+            return repository.save(account.get());
         }
         throw new AccountInvalidException("Conta Invalida");
     }
 
     public ResponseEntity<Void> delete(Long id) {
-        Optional<Account> contaOptional = findById(id);
-        if (contaOptional.isPresent()) {
-            Account account = contaOptional.get();
+        Optional<Account> accountOptional = findById(id);
+        if (accountOptional.isPresent()) {
+            Account account = accountOptional.get();
             repository.deleteById(account.getId());
             return ResponseEntity.noContent().build();
         }

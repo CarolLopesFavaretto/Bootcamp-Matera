@@ -2,8 +2,12 @@ package bootcamp.com.br.matera;
 
 import bootcamp.com.br.matera.Data.AccountData;
 import bootcamp.com.br.matera.domain.Account;
+import bootcamp.com.br.matera.dto.request.PixRequest;
+import bootcamp.com.br.matera.dto.response.PixResponse;
 import bootcamp.com.br.matera.repository.AccountRepository;
+import bootcamp.com.br.matera.service.AccountService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.glassfish.jaxb.core.v2.TODO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 public class AccountTestIntegrations {
 
+
+    @Autowired
+    private AccountService service;
 
     @Autowired
     private AccountRepository repository;
@@ -104,6 +111,30 @@ public class AccountTestIntegrations {
                     assertThat(resp.getAgency()).isEqualTo(account.getAgency());
                     assertThat(resp.getBalance()).isEqualTo(BigDecimal.valueOf(200).setScale(2));
                 });
+    }
+
+    @Test
+    public void shouldSendPix() throws Exception {
+        Account account = AccountData.getAccount(1L);
+        repository.save(account);
+
+//        TODO criar owner
+
+        PixRequest request = PixRequest.builder()
+                .originKey("123456789")
+                .destinationKey("9876543210")
+                .balance(BigDecimal.valueOf(100).setScale(2))
+                .build();
+
+        service.pix(request);
+
+        mvc.perform(MockMvcRequestBuilders
+                        .post("/account/entry/pix")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
     }
 
     @Test
