@@ -18,10 +18,13 @@ public class OwnerService {
     private OwnerRepository repository;
 
     @Autowired
+    private AccountService accountService;
+
+    @Autowired
     private OwnerMapper mapper;
 
     @Transactional
-    public ResponseEntity<OwnerResponse> createOwner(OwnerRequest request){
+    public ResponseEntity<OwnerResponse> createOwner(OwnerRequest request) {
         Owner owner = mapper.toModel(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(repository.save(owner)));
     }

@@ -1,7 +1,6 @@
 package bootcamp.com.br.matera.controller;
 
 import bootcamp.com.br.matera.domain.Account;
-import bootcamp.com.br.matera.dto.request.AccountRequest;
 import bootcamp.com.br.matera.dto.request.PixRequest;
 import bootcamp.com.br.matera.dto.response.AccountResponse;
 import bootcamp.com.br.matera.dto.response.PixResponse;
@@ -32,9 +31,9 @@ public class AccountController {
         return service.findById(id);
     }
 
-    @PostMapping
-    public ResponseEntity<AccountResponse> createAccount(@RequestBody AccountRequest request) {
-        return service.createAccount(request);
+    @PostMapping("/{ownerId}")
+    public Account createAccount(@PathVariable Long ownerId, @RequestBody Account request) {
+        return service.createAccount(ownerId, request);
     }
 
     @PostMapping("/entry/{id}/credit/{value}")

@@ -1,15 +1,15 @@
 package bootcamp.com.br.matera.service;
 
 import bootcamp.com.br.matera.domain.Account;
+import bootcamp.com.br.matera.domain.Owner;
 import bootcamp.com.br.matera.dto.mapper.AccountMapper;
-import bootcamp.com.br.matera.dto.request.AccountRequest;
 import bootcamp.com.br.matera.dto.request.PixRequest;
 import bootcamp.com.br.matera.dto.response.AccountResponse;
 import bootcamp.com.br.matera.dto.response.PixResponse;
 import bootcamp.com.br.matera.exception.AccountInvalidException;
 import bootcamp.com.br.matera.repository.AccountRepository;
+import bootcamp.com.br.matera.repository.OwnerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,12 +25,16 @@ public class AccountService {
     private AccountRepository repository;
 
     @Autowired
+    private OwnerRepository ownerRepository;
+
+    @Autowired
     private AccountMapper mapper;
 
     @Transactional
-    public ResponseEntity<AccountResponse> createAccount(AccountRequest request) {
-        Account account = mapper.toModel(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(repository.save(account)));
+    public Account createAccount(Long ownerId, Account request) {
+        Optional<Owner> owner = ownerRepository.findById(ownerId);
+        request.setOwner(owner.get());
+        return repository.save(request);
     }
 
     @Transactional
@@ -44,8 +48,9 @@ public class AccountService {
             return ResponseEntity.notFound().build();
         }
     }
+
     @Transactional
-    public PixResponse pix(PixRequest request){
+    public PixResponse pix(PixRequest request) {
         Account accountOrigin = repository.findByOwnerCpf(request.getOriginKey());
         Account accountDestination = repository.findByOwnerCpf(request.getDestinationKey());
         accountOrigin.sendPix(accountDestination, request.getBalance());

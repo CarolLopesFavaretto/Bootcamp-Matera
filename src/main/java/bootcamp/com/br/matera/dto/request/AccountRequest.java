@@ -16,5 +16,4 @@ public class AccountRequest {
     private String numberAccount;
     private String agency;
     private BigDecimal balance;
-    private Long idOwner;
 }
