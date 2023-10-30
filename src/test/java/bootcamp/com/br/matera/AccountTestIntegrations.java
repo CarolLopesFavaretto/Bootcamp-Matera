@@ -3,11 +3,10 @@ package bootcamp.com.br.matera;
 import bootcamp.com.br.matera.Data.AccountData;
 import bootcamp.com.br.matera.domain.Account;
 import bootcamp.com.br.matera.dto.request.PixRequest;
-import bootcamp.com.br.matera.dto.response.PixResponse;
 import bootcamp.com.br.matera.repository.AccountRepository;
+import bootcamp.com.br.matera.repository.OwnerRepository;
 import bootcamp.com.br.matera.service.AccountService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.glassfish.jaxb.core.v2.TODO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +36,9 @@ public class AccountTestIntegrations {
     private AccountRepository repository;
 
     @Autowired
+    private OwnerRepository ownerRepository;
+
+    @Autowired
     private MockMvc mvc;
 
     @Autowired
@@ -45,14 +47,23 @@ public class AccountTestIntegrations {
 
     @Test
     public void shouldCreateAccount() throws Exception {
-        Account account = AccountData.getAccount(9L);
+        Account account = AccountData.getCreateAccount(9L);
         repository.save(account);
 
-        mvc.perform(MockMvcRequestBuilders.post("/account")
+
+        mvc.perform(MockMvcRequestBuilders.post("/account/{ownerId}", account.getOwner().getId())
                         .content(objectMapper.writeValueAsString(account))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(mvcResult -> {
+                    String contentAsString = mvcResult.getResponse().getContentAsString();
+                    Account resp = objectMapper.readValue(contentAsString, Account.class);
+                    assertThat(resp.getNumberAccount()).isEqualTo(account.getNumberAccount());
+                    assertThat(resp.getAgency()).isEqualTo(account.getAgency());
+                    assertThat(resp.getBalance()).isEqualTo(account.getBalance());
+                    assertThat(resp.getOwner().getId()).isEqualTo(account.getOwner().getId());
+                });
 
     }
 
@@ -97,7 +108,7 @@ public class AccountTestIntegrations {
 
     @Test
     public void shouldCreditAccountById() throws Exception {
-        Account account = AccountData.getAccount(1L);
+        Account account = AccountData.getAccount(10L);
         repository.save(account);
 
         mvc.perform(MockMvcRequestBuilders
@@ -115,18 +126,19 @@ public class AccountTestIntegrations {
 
     @Test
     public void shouldSendPix() throws Exception {
-        Account account = AccountData.getAccount(1L);
+
+        Account account = AccountData.getCreateAccount(1L);
         repository.save(account);
 
-//        TODO criar owner
+        Account account1 = AccountData.getCreateAccount1(2L);
+        repository.save(account1);
+
 
         PixRequest request = PixRequest.builder()
-                .originKey("123456789")
-                .destinationKey("9876543210")
+                .originKey("071.669.720-33")
+                .destinationKey("41246532808")
                 .balance(BigDecimal.valueOf(100).setScale(2))
                 .build();
-
-        service.pix(request);
 
         mvc.perform(MockMvcRequestBuilders
                         .post("/account/entry/pix")
@@ -139,7 +151,7 @@ public class AccountTestIntegrations {
 
     @Test
     public void shouldFindAccountById() throws Exception {
-        Account account = AccountData.getAccount(10L);
+        Account account = AccountData.getAccount(18L);
         repository.save(account);
 
         mvc.perform(MockMvcRequestBuilders
@@ -158,7 +170,7 @@ public class AccountTestIntegrations {
 
     @Test
     public void shouldDeleteAccount() throws Exception {
-        Account account = AccountData.getAccount(10L);
+        Account account = AccountData.getAccount(19L);
         repository.save(account);
 
         mvc.perform(MockMvcRequestBuilders.delete("/account/{id}", account.getId())

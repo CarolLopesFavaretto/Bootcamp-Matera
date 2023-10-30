@@ -10,6 +10,7 @@ import bootcamp.com.br.matera.exception.AccountInvalidException;
 import bootcamp.com.br.matera.repository.AccountRepository;
 import bootcamp.com.br.matera.repository.OwnerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,10 +32,14 @@ public class AccountService {
     private AccountMapper mapper;
 
     @Transactional
-    public Account createAccount(Long ownerId, Account request) {
+    public ResponseEntity<Account> createAccount(Long ownerId, Account request) {
         Optional<Owner> owner = ownerRepository.findById(ownerId);
-        request.setOwner(owner.get());
-        return repository.save(request);
+        if(owner.isPresent()){
+            request.setOwner(owner.get());
+            return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(request));
+        }
+        return ResponseEntity.notFound().build();
+
     }
 
     @Transactional

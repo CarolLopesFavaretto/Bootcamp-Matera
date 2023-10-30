@@ -32,7 +32,7 @@ public class AccountController {
     }
 
     @PostMapping("/{ownerId}")
-    public Account createAccount(@PathVariable Long ownerId, @RequestBody Account request) {
+    public ResponseEntity<Account> createAccount(@PathVariable Long ownerId, @RequestBody Account request) {
         return service.createAccount(ownerId, request);
     }
 
