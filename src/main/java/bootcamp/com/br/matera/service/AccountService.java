@@ -5,6 +5,7 @@ import bootcamp.com.br.matera.domain.Account;
 import bootcamp.com.br.matera.domain.Owner;
 import bootcamp.com.br.matera.dto.mapper.AccountMapper;
 import bootcamp.com.br.matera.dto.request.AccountClientRequest;
+import bootcamp.com.br.matera.dto.request.ActiveRequest;
 import bootcamp.com.br.matera.dto.request.PixRequest;
 import bootcamp.com.br.matera.dto.response.AccountResponse;
 import bootcamp.com.br.matera.dto.response.PixResponse;
@@ -50,6 +51,19 @@ public class AccountService {
         account.setOwner(newOwner);
         return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(account));
     }
+
+    @Transactional
+    public  ResponseEntity<Account> active(Long id, ActiveRequest request) {
+        Optional<Account> accountId = findById(id);
+        if (accountId.isPresent()){
+            Account account = accountId.get();
+
+            account.setActive(request.getActive());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(repository.save(account));
+        }
+        throw new AccountInvalidException ("Conta inválida");
+    }
+
 
 
     @Transactional

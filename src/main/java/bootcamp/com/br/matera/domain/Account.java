@@ -1,5 +1,6 @@
 package bootcamp.com.br.matera.domain;
 
+import bootcamp.com.br.matera.dto.request.AccountRequest;
 import bootcamp.com.br.matera.exception.AccountInvalidException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,8 @@ public class Account {
     private String agency;
     @Column(name = "SALDO")
     private BigDecimal balance = BigDecimal.ZERO;
+    @Column(name = "ATIVO")
+    private Boolean active = Boolean.TRUE;
 
     @OneToOne(cascade=CascadeType.ALL)
     private Owner owner;
