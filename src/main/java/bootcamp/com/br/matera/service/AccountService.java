@@ -1,8 +1,10 @@
 package bootcamp.com.br.matera.service;
 
+import bootcamp.com.br.matera.client.BacenClient;
 import bootcamp.com.br.matera.domain.Account;
 import bootcamp.com.br.matera.domain.Owner;
 import bootcamp.com.br.matera.dto.mapper.AccountMapper;
+import bootcamp.com.br.matera.dto.request.AccountClientRequest;
 import bootcamp.com.br.matera.dto.request.PixRequest;
 import bootcamp.com.br.matera.dto.response.AccountResponse;
 import bootcamp.com.br.matera.dto.response.PixResponse;
@@ -31,16 +33,24 @@ public class AccountService {
     @Autowired
     private AccountMapper mapper;
 
-    @Transactional
-    public ResponseEntity<Account> createAccount(Long ownerId, Account request) {
-        Optional<Owner> owner = ownerRepository.findById(ownerId);
-        if(owner.isPresent()){
-            request.setOwner(owner.get());
-            return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(request));
-        }
-        return ResponseEntity.notFound().build();
+    @Autowired
+    private BacenClient client;
 
+
+    @Transactional
+    public ResponseEntity<Account> createAccountClient(Account account) {
+
+        Owner owner = account.getOwner();
+        Owner newOwner = ownerRepository.save(owner);
+
+        AccountClientRequest accountDTO = new AccountClientRequest(account.getNumberAccount(),
+                account.getAgency(), newOwner.getCpf(), account.getBalance());
+
+        client.createAccount(accountDTO);
+        account.setOwner(newOwner);
+        return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(account));
     }
+
 
     @Transactional
     public ResponseEntity<AccountResponse> updateAccount(Long id, Account request) {

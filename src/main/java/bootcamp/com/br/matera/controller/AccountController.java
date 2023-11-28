@@ -31,9 +31,10 @@ public class AccountController {
         return service.findById(id);
     }
 
-    @PostMapping("/{ownerId}")
-    public ResponseEntity<Account> createAccount(@PathVariable Long ownerId, @RequestBody Account request) {
-        return service.createAccount(ownerId, request);
+
+    @PostMapping
+    public ResponseEntity<Account> createAccountClient( @RequestBody Account request) {
+        return service.createAccountClient(request);
     }
 
     @PostMapping("/entry/{id}/credit/{value}")

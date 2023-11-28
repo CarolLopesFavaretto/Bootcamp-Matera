@@ -1,7 +1,6 @@
 package bootcamp.com.br.matera.dto.mapper;
 
 import bootcamp.com.br.matera.domain.Account;
-import bootcamp.com.br.matera.dto.request.AccountRequest;
 import bootcamp.com.br.matera.dto.response.AccountResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -14,5 +13,4 @@ public interface AccountMapper {
 
     AccountResponse toResponse(Account account);
 
-    Account toModel(AccountRequest request);
 }

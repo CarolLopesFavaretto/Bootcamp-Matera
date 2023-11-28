@@ -50,8 +50,7 @@ public class AccountTestIntegrations {
         Account account = AccountData.getCreateAccount(9L);
         repository.save(account);
 
-
-        mvc.perform(MockMvcRequestBuilders.post("/account/{ownerId}", account.getOwner().getId())
+        mvc.perform(MockMvcRequestBuilders.post("/account")
                         .content(objectMapper.writeValueAsString(account))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
