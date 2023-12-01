@@ -3,7 +3,6 @@ package bootcamp.com.br.matera.controller;
 import bootcamp.com.br.matera.domain.Account;
 import bootcamp.com.br.matera.dto.request.ActiveRequest;
 import bootcamp.com.br.matera.dto.request.PixRequest;
-import bootcamp.com.br.matera.dto.response.AccountResponse;
 import bootcamp.com.br.matera.dto.response.PixResponse;
 import bootcamp.com.br.matera.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,14 +54,9 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.CREATED).body(account);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<AccountResponse> updateAccount(@PathVariable Long id, @RequestBody Account request) {
-        return service.updateAccount(id, request);
-    }
-
-    @PatchMapping("/{id}/active")
-    public ResponseEntity<Account> accountActive(@PathVariable Long id, @RequestBody ActiveRequest active) {
-        return service.active(id, active);
+    @PatchMapping("/{id}")
+    public ResponseEntity<Account> updateActive(@PathVariable Long id, @RequestBody ActiveRequest request) {
+        return service.updateActiveStatus(id, request);
     }
 
     @DeleteMapping("/{id}")

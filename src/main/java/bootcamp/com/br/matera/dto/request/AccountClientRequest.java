@@ -11,11 +11,10 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class AccountClientRequest {
 
-
     private String numberAccount;
     private String agency;
     private String cpf;
     private BigDecimal balance = BigDecimal.ZERO;
-
+    private Boolean active = Boolean.TRUE;
 
 }

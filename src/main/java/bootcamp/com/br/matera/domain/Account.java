@@ -1,6 +1,5 @@
 package bootcamp.com.br.matera.domain;
 
-import bootcamp.com.br.matera.dto.request.AccountRequest;
 import bootcamp.com.br.matera.exception.AccountInvalidException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,7 +26,7 @@ public class Account {
     @Column(name = "ATIVO")
     private Boolean active = Boolean.TRUE;
 
-    @OneToOne(cascade=CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     private Owner owner;
 
     //enriquecendo classe com metodos
@@ -44,7 +43,7 @@ public class Account {
     }
 
     public void sendPix(Account destiny, BigDecimal value) {
-        if (this.balance.compareTo(value) < 0){
+        if (this.balance.compareTo(value) < 0) {
             throw new AccountInvalidException("Conta sem saldo disponível.");
         }
         this.debit(value);

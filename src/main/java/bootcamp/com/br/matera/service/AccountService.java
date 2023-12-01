@@ -7,7 +7,6 @@ import bootcamp.com.br.matera.dto.mapper.AccountMapper;
 import bootcamp.com.br.matera.dto.request.AccountClientRequest;
 import bootcamp.com.br.matera.dto.request.ActiveRequest;
 import bootcamp.com.br.matera.dto.request.PixRequest;
-import bootcamp.com.br.matera.dto.response.AccountResponse;
 import bootcamp.com.br.matera.dto.response.PixResponse;
 import bootcamp.com.br.matera.exception.AccountInvalidException;
 import bootcamp.com.br.matera.repository.AccountRepository;
@@ -45,7 +44,7 @@ public class AccountService {
         Owner newOwner = ownerRepository.save(owner);
 
         AccountClientRequest accountDTO = new AccountClientRequest(account.getNumberAccount(),
-                account.getAgency(), newOwner.getCpf(), account.getBalance());
+                account.getAgency(), newOwner.getCpf(), account.getBalance(), account.getActive());
 
         client.createAccount(accountDTO);
         account.setOwner(newOwner);
@@ -53,26 +52,18 @@ public class AccountService {
     }
 
     @Transactional
-    public  ResponseEntity<Account> active(Long id, ActiveRequest request) {
-        Optional<Account> accountId = findById(id);
-        if (accountId.isPresent()){
-            Account account = accountId.get();
-
-            account.setActive(request.getActive());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(repository.save(account));
-        }
-        throw new AccountInvalidException ("Conta inválida");
-    }
-
-
-
-    @Transactional
-    public ResponseEntity<AccountResponse> updateAccount(Long id, Account request) {
+    public ResponseEntity<Account> updateActiveStatus(Long id, ActiveRequest request) {
         Optional<Account> accountOptional = repository.findById(id);
 
         if (accountOptional.isPresent()) {
-            request.setId(id);
-            return ResponseEntity.ok(mapper.toResponse(repository.save(request)));
+            Account account = accountOptional.get();
+
+            ActiveRequest accountDTO = new ActiveRequest(request.getActive());
+
+            client.updateActive(id, accountDTO);
+
+            account.setActive(request.getActive());
+            return ResponseEntity.ok((repository.save(account)));
         } else {
             return ResponseEntity.notFound().build();
         }

@@ -12,9 +12,6 @@ public class OwnerService {
     @Autowired
     private OwnerRepository repository;
 
-    @Autowired
-    private AccountService accountService;
-
     @Transactional
     public Owner createOwner(Owner request) {
         return repository.save(request);

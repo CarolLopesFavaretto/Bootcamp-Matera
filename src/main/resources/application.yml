@@ -16,8 +16,9 @@ spring:
 
 feign:
   client:
-      url: http://localhost:8081
-
+      url: http://localhost:8081/account
+  okhttp:
+    enabled: true
 
 logging:
   level:
