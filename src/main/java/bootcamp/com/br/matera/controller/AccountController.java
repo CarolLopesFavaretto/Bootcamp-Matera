@@ -31,9 +31,8 @@ public class AccountController {
         return service.findById(id);
     }
 
-
     @PostMapping
-    public ResponseEntity<Account> createAccountClient( @RequestBody Account request) {
+    public ResponseEntity<Account> createAccountClient(@RequestBody Account request) {
         return service.createAccountClient(request);
     }
 
@@ -50,8 +49,7 @@ public class AccountController {
 
     @PostMapping("/entry/{id}/debit/{value}")
     public ResponseEntity<Account> debit(@PathVariable Long id, @PathVariable BigDecimal value) {
-        Account account = service.debit(id, value);
-        return ResponseEntity.status(HttpStatus.CREATED).body(account);
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.debit(id, value));
     }
 
     @PatchMapping("/{id}")
